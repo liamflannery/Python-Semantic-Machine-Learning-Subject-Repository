@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<!-- saved from url=(0108)https://ilearn.mq.edu.au/pluginfile.php/7626954/mod_resource/content/19/COMP3220_%20Workshop%20Week%209.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title> COMP3220: Workshop Week 9</title>
+
+<style>
+body {
+  font-family: Verdana, Geneva, sans-serif;
+  margin: 35px;
+}
+
+pre {
+  font-size: 130%;    
+} 
+</style>
+
+</head>
+
+<body data-new-gr-c-s-check-loaded="14.1060.0" data-gr-ext-installed="">
+
+<h2>Workshop Week 9</h2>
+
+<p>In this week's workshop, we will have a closer look at how we can process RDF and RDFa in Python 
+   with the help of the rdflib library.</p>
+
+
+<p></p>
+
+<h3>Your Tasks</h3>
+
+<h4>1. RDF and Python</h4>
+
+<p>Given the following data in Turtle notation: </p>
+
+<pre>   @prefix schema: &lt;http://schema.org/&gt; .
+
+   &lt;http://rdfa.info/play/#oswald&gt; a schema:Person ;
+       schema:givenName "Oswald" ;
+       schema:familyName "Muster" ;
+       schema:email "Oswald.Muster@mq.edu.au".
+
+</pre>
+
+<p>Store this data in a file with the name <strong>example.ttl</strong>. Write a Python script
+   that uses the rdflib library. This Python script should first parse the data into a graph 
+   and then display the following information:</p>
+
+<ol>
+  <li>the number of statements in the graph;</li>
+  <li>the entire graph serialized in  RDF/XML notation;</li>
+  <li>the subject, predicate, and object of each statement in this graph.</li>
+</ol>
+
+<p>The output of your Python script should look similar to the output here:</p>
+
+<pre>  The graph has 4 statements.
+
+   &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+   &lt;rdf:RDF
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:schema="http://schema.org/"
+   &gt;
+     &lt;rdf:Description rdf:about="http://rdfa.info/play/#oswald"&gt;
+       &lt;rdf:type rdf:resource="http://schema.org/Person"/&gt;
+       &lt;schema:givenName&gt;Oswald&lt;/schema:givenName&gt;
+       &lt;schema:email&gt;Oswald.Muster@mq.edu.au&lt;/schema:email&gt;
+       &lt;schema:familyName&gt;Muster&lt;/schema:familyName&gt;
+     &lt;/rdf:Description&gt;
+   &lt;/rdf:RDF&gt;
+
+   subject:    http://rdfa.info/play/#oswald
+   predicate:  http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+   object:     http://schema.org/Person
+
+   subject:    http://rdfa.info/play/#oswald
+   predicate:  http://schema.org/givenName
+   object:     Oswald
+
+   subject:    http://rdfa.info/play/#oswald
+   predicate:  http://schema.org/email
+   object:     Oswald.Muster@mq.edu.au
+
+   subject:    http://rdfa.info/play/#oswald
+   predicate:  http://schema.org/familyName
+   object:     Muster
+
+</pre>
+
+<p>You can find some hints in the lecture notes on how to tackle this problem. If you get stuck,
+   then Google (in particular <a href="http://stackoverflow.com/">stackoverflow</a>) is your second 
+   best friend (of course apart from the workshop supervisor).</p>
+
+<h4>2. Playing with RDFa</h4>
+
+<p>Go to the <a href="http://rdfa.info/play/">RDFa Play</a> web page and try out all examples there, in particular
+   study how the HTML fragments have been augmented with RDFa markup. For each example available there, check
+   what the Raw Data (in Turtle notation) looks like.</p>
+
+
+<h4>3. Querying an RDFa-augmented XHTML page via Python/SPARQL</h4>
+
+<p> Below is a simple XHTML document that has been augmented with RDFa markup: </p>
+
+<pre>&lt;!DOCTYPE html&gt;  
+   &lt;html
+      xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" 
+      prefix="dc: http://purl.org/dc/elements/1.1/"&gt;
+     &lt;head&gt;
+       &lt;title&gt;Ronald McDonald's Home Page&lt;/title&gt;
+       &lt;link rel="profile" href="http://www.w3.org/1999/xhtml/vocab" /&gt;
+       &lt;base href="http://localhost:8080/ronald-mcdonald/" /&gt;
+       &lt;meta property="dc:creator" content="Ronald McDonald" /&gt;
+       &lt;link rel="foaf:primaryTopic" href="http://localhost:8080/ronald-mcdonald/#me" /&gt;
+     &lt;/head&gt;
+     &lt;body about="http://localhost:8080/ronald-mcdonald/#me"&gt;
+       &lt;h1&gt;Ronald McDonald's Home Page&lt;/h1&gt;
+       &lt;p&gt;Hi, my nickname is &lt;span property="foaf:nick"&gt;Mickey D.&lt;/span&gt; and I like
+         &lt;a href="http://www.kfc.com.au/" rel="foaf:interest"  
+           lang="en"&gt;KFC Australia&lt;/a&gt;.
+       &lt;/p&gt;
+       &lt;p&gt;
+         My &lt;span rel="foaf:interest" resource="urn:ISBN:071815780X"&gt;favorite
+         book is &lt;span about="urn:ISBN:071815780X"&gt;&lt;strong
+         property="dc:title"&gt;Jamie's 15-Minute Meals&lt;/strong&gt; by
+         &lt;span property="dc:creator"&gt;Jamie Oliver&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;.
+       &lt;/p&gt;
+     &lt;/body&gt;
+   &lt;/html&gt;
+
+</pre>
+
+<p>Save this document as <strong>index.html</strong> in a folder named <strong>ronald-mcdonald</strong>. 
+From a level above this folder, launch a Python HTTP server:
+
+</p><pre>  c:&gt;python -m http.server 8080
+
+</pre>
+
+<p>and access the web page via http://localhost:8080/ronald-mcdonald/ and you should see the
+   following in Google Chrome:</p>
+
+<br>
+
+<img src="./COMP3220_ Workshop Week 9_files/mcdonald.png" alt="McDonald">
+
+<br>
+<br>
+
+<p> Now write a Python script that uses the rdflib 6.1.1 library (pip install rdflib) that relies on PyRDFA (pip install pyRdfa3) for RDFa processing. 
+    The Python script should first fetch the XHTML page and then parse it into an RDF graph, and then extract the following things: </p>
+
+<ol>
+  <li> the RDFa from the XHTML page and displays this information as RDF/XML; </li>
+  <li> the name of the creator of the Web page and displays this information in form of a JSON object; </li>
+  <li> the primary topic of the Web page and displays this information in form of a JSON object; </li>
+  <li> the nick name of the person that this Web page describes and displays this information in form of a JSON object; </li>
+  <li> the interests of the person that this Web page describes and displays all information in form of a JSON object; </li>
+  <li> the book (title) that Mickey D. is interested in and displays this information in form of a JSON object. </li>
+</ol>
+
+<p>You can find some hints on how to solve this task in the lecture notes, but for some details you will probably also have to check
+    the <a href="https://rdflib.readthedocs.io/en/stable/">rdflib documentation</a> or do a Google search.
+    Note that the output of your Python script should look as follows:</p>
+
+<pre>   Answer 1:
+   &lt;?xml version="1.0" encoding="utf-8"?&gt;
+   &lt;rdf:RDF
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:foaf="http://xmlns.com/foaf/0.1/"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   &gt;
+     &lt;rdf:Description rdf:about="http://localhost:8080/ronald-mcdonald/"&gt;
+       &lt;foaf:primaryTopic&gt;
+         &lt;rdf:Description rdf:about="http://localhost:8080/ronald-mcdonald/#me"&gt;
+           &lt;foaf:nick xml:lang="en"&gt;Mickey D.&lt;/foaf:nick&gt;
+           &lt;foaf:interest rdf:resource="http://www.kfc.com.au/"/&gt;
+           &lt;foaf:interest rdf:resource="urn:ISBN:071815780X"/&gt;
+         &lt;/rdf:Description&gt;
+       &lt;/foaf:primaryTopic&gt;
+       &lt;dc:creator xml:lang="en"&gt;Ronald McDonald&lt;/dc:creator&gt;
+     &lt;/rdf:Description&gt;
+     &lt;rdf:Description rdf:about="urn:ISBN:071815780X"&gt;
+       &lt;dc:title xml:lang="en"&gt;Jamie's 15-Minute Meals&lt;/dc:title&gt;
+       &lt;dc:creator xml:lang="en"&gt;Jamie Oliver&lt;/dc:creator&gt;
+     &lt;/rdf:Description&gt;
+   &lt;/rdf:RDF&gt;
+
+
+   Answer 2:
+   {"results": {"bindings": 
+                  [{"obj": {"value": "Ronald McDonald", 
+                            "type": "literal",
+                            "xml:lang": "en"}}]},
+    "head": {"vars": ["obj"]}}
+
+   Answer 3:
+   {"results": {"bindings": 
+                  [{"obj": {"value": "http://localhost:8080/ronald-mcdonald/#me", 
+                            "type": "uri"}}]},
+     "head": {"vars": ["obj"]}}
+
+   Answer 4:
+   {"results": {"bindings": 
+                  [{"obj": {"value": "Mickey D.",
+                    "type": "literal",
+                     "xml:lang": "en"}}]},
+    "head": {"vars": ["obj"]}}
+
+   Answer 5:
+   {"results": {"bindings":
+                  [{"obj": {"value": "http://www.kfc.com.au/", 
+                            "type": "uri"}},
+                   {"obj": {"value": "urn:ISBN:071815780X",
+                            "type": "uri"}}]},
+    "head": {"vars": ["obj"]}}
+
+   Answer 6:
+   {"results": {"bindings": 
+                  [{"obj": {"value": "Jamie's 15-Minute Meals",
+                            "type": "literal",
+                            "xml:lang": "en"}}]}, 
+    "head": {"vars": ["obj"]}}
+</pre>
+
+<br>
+
+
+
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

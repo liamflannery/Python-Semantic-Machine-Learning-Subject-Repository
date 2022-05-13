@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<!-- saved from url=(0097)https://ilearn.mq.edu.au/pluginfile.php/7014185/mod_resource/content/8/workshop-11-solutions.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title> COMP3220: Workshop Week 11 </title>
+
+<style>
+body {
+  font-family: Verdana, Geneva, sans-serif;
+  margin: 35px;
+}
+
+pre {
+  font-size: 130%;    
+} 
+</style>
+
+</head>
+
+<body>
+    
+<h2>Workshop Week 11</h2>
+
+<p>In this week's workshop, we will discuss a few questions that are related to OWL 2 DL (description logics) and rule languages. 
+  Additionally, you will use the Answer Set Programming tool <i>clingo</i> to reconstruct a rule-based program that we discussed
+  in the lecture.</p>
+
+<h4>Your Tasks</h4>
+
+<h4>OWL 2 and Rule Languages</h4>
+
+<ol>
+  <li>First-order logic as well as description logics are knowledge representation languages. Why did the W3C choose 
+      description logics and not first-order logic as the logical foundation for the Web Ontology Language OWL 2?</li><br>
+
+  <li>Explain what the difference between an ABox and a TBox in an ontology is and provide two
+      ABox statements and two TBox statements.</li><br>
+
+  <li>OWL 2 DL is based on a version of description logics and supports three different profiles.
+      What are these profiles good for and what kind of problems do they solve?</li><br>
+
+  <li>Why didn't the W3C develop a standard for rule languages so far? What does the Rule Interchange Format (RIF) try to achieve?</li><br>
+
+  <li>Explain the differences between a declarative rule and a production rule.</li><br>
+
+  <li>Explain why the Semantic Web should be able to deal with non-monotonic rules and provide 
+    an example of a non-monotonic rule.</li><br>
+
+  <li>Statistical relational learning combines rules with probabilities. Below is a logic program with annotated disjunctions that
+      represents the following gambling problem:  Toss a coin and draw a ball from each of two urns. The first urn contains three
+      red and seven blue balls; the second urn two red, three green and five blue balls.
+    
+<pre>
+heads:0.4.
+col(1, red):0.3 ; col(1, blue):0.7.
+col(2, red):0.2 ; col(2, green):0.3 ; col(2,blue):0.5.
+win :- heads, col(_, red).
+win :- col(1, C), col(2, C).
+</pre>
+
+    <p>Answer the following questions:</p>
+    <ol>
+      <li>What is the probability of the most probable world where <font face="courrier">win</font> is true?</li>
+      <li>What is the probability of <font face="courrier">win</font>?</li>
+      <li>What is the probability of <font face="courrier">win</font> given  <font face="courrier">col(2, green)</font>?</li>
+    </ol>
+
+  </li><br>
+
+</ol>
+
+
+<h4>Answer Set Programming</h4>
+
+<p>Answer Set Programming is a form of declarative programming and has its roots in logic programming, 
+  deductive databases and non-monotonic reasoning. <a href="https://potassco.org/clingo/">Clingo</a>
+  is a tool that generates answer sets for an ASP program.</p>
+
+<p>Install clingo using the Anaconada prompt and then run: <font face="courrier">conda install -c potassco clingo</font> .</p>
+
+<p>Afterwards, execute the following ASP program:</p> 
+
+<pre>% -----------------------------------------
+% COMP3220
+%
+% Answer Set Programming
+% Working with Rules and Facts
+% -----------------------------------------
+
+wine_bottle(brand1).   
+wine_bottle(brand2). 
+wine_bottle(brand3).    
+wine_bottle(brand4).    
+wine_bottle(brand5). 
+
+type(brand1, whiteWine).
+type(brand1, sweetWine).    
+type(brand2, whiteWine).
+type(brand2, dryWine). 
+type(brand3, whiteWine).   
+type(brand3, dryWine).
+type(brand4, redWine). 
+type(brand4, dryWine).      
+type(brand5, redWine).    
+type(brand5, sweetWine).
+
+person(john).
+person(mary).
+person(sue).
+
+has_preference(john,  whiteWine).
+has_preference(mary, redWine).
+has_preference(sue,   dryWine).
+
+is_suitable_for(Brand, Person) :-  
+  has_preference(Person, Sort), 
+  type(Brand, Sort). 
+
+#show is_suitable_for/2.  
+
+</pre>
+
+In order to do this, you copy this ASP program into a text file (for example, asp.lp).
+
+Next, you run clingo as follows:
+
+<pre>   &gt;clingo 0 asp.lp
+
+</pre>
+
+This will generate the following output:
+<pre>clingo version 5.5.0
+Reading from asp.lp
+Solving...
+Answer: 1
+is_suitable_for(brand1,john)
+is_suitable_for(brand2,john) 
+is_suitable_for(brand3,john)
+is_suitable_for(brand4,mary) 
+is_suitable_for(brand5,mary) 
+is_suitable_for(brand2,sue) 
+is_suitable_for(brand3,sue) 
+is_suitable_for(brand4,sue)
+SATISFIABLE
+
+Models       : 1
+Calls        : 1
+Time         : 0.000s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)
+CPU Time     : 0.000s
+
+</pre>
+
+<p>Now do the following things:</p>
+
+<ol>
+<li> Add a rule that generates the Closed World Assumption for the literal has_preference/2.</li><br>
+<li> Add a rule for: If a brand is suitable for a person then the person selects that brand or skips it.</li><br>
+<li> Add a rule for: Exclude that a person selects more than one brand.</li><br>
+<li> Add a rule for: Include only those answer sets where three persons select a brand.</li><br>
+<li> Add a rule for: If brand 4 would be suitable for a person then that person actually skips brand 4.</li><br>
+<li> Add a rule for: If brand 2 would be suitable for a person then that person actually skips brand 2.</li><br>
+<li> Add a (negated) fact for: John does not select brand 3.</li>
+</ol>
+
+
+<p>How to do this, you can find in detail in the <strong>lecture notes</strong> (Week 11: Rule Languages). 
+After adding a rule to your program, run the ASP solver again and observe what happens. You can selectively display, 
+a particular literal you are interested in by adding the following directives to your ASP program:</p>
+
+<pre>  #show is_suitable_for/2.
+  #show -has_preference/2.
+  #show selects/2.
+
+</pre>
+
+and use '%' if you do not want to see one or more of these literals in the output:
+
+<pre>  % #show is_suitable_for/2.
+  % #show -has_preference/2.
+  #show selects/2.
+
+</pre>
+
+</body></html>

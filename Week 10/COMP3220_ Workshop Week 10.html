@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<!-- saved from url=(0087)https://ilearn.mq.edu.au/pluginfile.php/7626963/mod_resource/content/7/workshop-10.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title> COMP3220: Workshop Week 10</title>
+
+<style>
+body {
+  font-family: Verdana, Geneva, sans-serif;
+  margin: 35px;
+}
+
+pre {
+  font-size: 130%;    
+} 
+</style>
+
+</head>
+
+<body data-new-gr-c-s-check-loaded="14.1060.0" data-gr-ext-installed="">
+
+<h2>Workshop Week 10</h2>
+
+<p>In this week's workshop, you will use the desktop version of the ontology editor
+    <a href="http://protege.stanford.edu/products.php#desktop-protege">Protégé</a> and explore how an 
+   existing OWL ontology has been built with the help of this tool. Afterwards, you will build a simple
+   family ontology starting from a specification in (controlled) natural language. </p>
+
+<h4>1. Exploring Protégé and the Pizza Ontology</h4>
+
+<p>The Pizza ontology is an ontology that has been developed for teaching purposes at the University of
+   Manchester. Please download the <a href="http://protege.stanford.edu/ontologies/pizza/pizza.owl">pizza.owl</a> ontology and
+   do the following things:</p>
+
+<ol>
+  <li>Start up the ontology editor Protégé that is installed on the lab machines. Once you see the 
+    interface (below), go to <strong>File &gt; Open ...</strong> and load the <strong>pizza.owl</strong> ontology into the editor
+    (alternatively, you can fetch the ontology directly from http://protege.stanford.edu/ontologies/pizza/pizza.owl via <strong>
+     File &gt; Open From URL ...</strong>). 
+  </li>
+
+  <br>
+  <img src="./COMP3220_ Workshop Week 10_files/interface.jpeg" alt="interface.jpeg">
+  <br>
+  <br>
+
+  <li>Select the menu item <strong>Entities &gt; Classes</strong>, expand the class hierarchy in the class hierarchy pannel, and explore how
+      this hierarchy has been structured.</li><br>
+
+  <li>In this class hierarchy, you will find the class <i>CheeseyPizza</i> among other classes organised under <i>Pizza</i>, select <i>CheeseyPizza</i> and
+      check the description of <i>CheeseyPizza</i> in the description pannel.</li><br>
+
+  <li>Check the descriptions of a few other classes that occur in the class hierarchy and explore how you can change the description of a class
+      in the description pannel using the class expression editor (you have to click on edit icon first in order to edit something).</li><br>
+
+  <li>Now select the menu item <strong>Object Properties</strong>, expand the object property hierarchy, and explore how this hierarchy has been structured.</li><br>
+
+  <li>Have a look at the characteristics of these object properties in the characteristics pannel and at their descriptions in the description pannel.
+      You can find some background information about the <a href="http://www.w3.org/TR/owl2-primer/#Property_Characteristics">property characteristics</a>
+      in the <a href="http://www.w3.org/TR/owl2-primer/">OWL 2 Primer</a>.</li><br>
+
+  <li>Now select the menu item <strong>Individuals</strong>, and check how 
+       the individulas (for example, <strong>France</strong>) are described.</li><br>
+
+  <li>Now go back to the class hierarchy, select again <i>CheesyPizza</i> in the class hierarchy, have a look at the description pannel, 
+    then go to the menu item <strong>Reasoner</strong>, select <strong>HermiT</strong>, and then <strong>Start Reasoner</strong>,
+    check the desription pannel again and
+     find out what has changed. Do the same thing for a number of other classes.</li><br>
+
+  <li>Now, select the menu item <strong>Windows &gt; Tabs &gt; SPAQRL Query</strong>, and execute the example query there. What's going on here?
+      Try to come up with your own SPARQL queries and execute them over the Pizza ontology.</li><br>
+
+  <li>Finally, select the menu item <strong>File &gt; Save as ...</strong> and save the Pizza ontology in Turtle notation, open the resulting file
+      with a text editor and have a quick look at it.</li><br>
+</ol>
+  
+
+<h4>2. Building an OWL Ontology from a Specification in Natural Language</h4>
+
+<p> Now you should be ready to build your own ontology. The specification below speaks about a family and the relations between family members.
+    This specfication is written in a (controlled) natural language and it should be relatively straightforward to modell this knowledge 
+    in Protégé, if you stick to the following conventions:</p>
+
+<ol>
+  <li> modell proper names such as <strong>Cordula</strong> as individuals; </li><br>
+  <li> modell nouns such as <strong>gender</strong> as classes; </li><br>
+  <li> modell expressions such as <strong>has ... as a parent</strong> as roles (for example, <strong>hasParent</strong>); </li><br>
+  <li> modell expressions such as <strong>has a person as a parent</strong> as a role followed by an existenital restriction
+       (for example, <strong>(hasParent some Person)</strong>);</li><br>
+  <li> modell expressions such as <strong>has the value femaleGender as gender</strong> as a role, followed by the keyword
+       <strong>value</strong>, followed by the corresponding individual (for example, <strong>(hasGender value femaleGender)</strong>);</li><br>
+  <li> modell the expression <strong>is defined as</strong> as <strong>equivalent to</strong>.</li><br>
+</ol>
+
+<p>Specification in (controlled) natural language:</p>
+
+<pre>   Cordula has Rona as a sibling.
+   Cordula has Erwin as sibling.
+   Cordula has Mia as a parent.
+
+   Every gender is a thing.
+   Every person is a thing.
+
+   Every daughter is a subclass of a person.
+   Every daughter is defined as a person who has a person as a parent and 
+                                         who has the value femaleGender as gender.
+
+   Every father is a subclass of a person.
+   Every father is defined as a person who has a person as a child and 
+                                       who has the value maleGender as gender.
+
+   Every mother is a subclass of a person.
+   Every mother is defined as a person who has a person as a child and
+                                       who has the value femaleGender as gender.
+
+   Every offspring is a subclass of a person.
+   Every offspring is defined as a person who has a person as a parent.
+
+   Every parent is a subclass of a person.
+   Every parent is defined as a person who has a person as a child.
+
+   Every son is a subclass of a person.
+   Every son is defined as a person who has a person as a parent and 
+                                    who as the value maleGender as gender.
+
+
+   Cordula is an individual.
+   Cordula has Christa as a sibling.
+   Cordula has Rona as a sibling.
+   Cordula has Erwin as sibling.
+   Cordula has Mia as a parent.
+
+
+   Robert is an individual.
+
+   Dave is an individual.
+   Dave has Robert as a child.
+
+   Mia is an individual.
+
+   Jim is an individual.
+   Jim has Peter as a sibling.
+   Jim has Rona as a parent.
+
+   Rona is an individual.
+   Rona has Christa as a sibling.
+   Rona has Robert as a parent.
+   Rona has Mia as a parent.
+   Rona has femaleGender as gender.
+   Rona has Rona Smith as full name.
+
+   Erwin is an individual.
+   Erwin has Rona as a sibling.
+   Erwin has Christa as a sibling.
+   Erwin has Mia as a parent.
+   Erwin has Robert as a parent.
+
+   Christa is an individual.
+   Christa has Rona as a sibling.
+   Christa has Robert as a parent.
+   Christa has Mia as a parent.
+   Christa has femaleGender as gender.
+
+   Peter is an individual.
+   Peter has maleGender as gender.
+   Peter has Rona as a parent.
+
+   femaleGender is an individual.
+   maleGender is an individual.
+
+</pre>
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>
