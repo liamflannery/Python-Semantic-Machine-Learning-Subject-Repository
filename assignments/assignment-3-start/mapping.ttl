@@ -6,5 +6,65 @@
 @prefix rml: <http://semweb.mmlab.be/ns/rml#> .
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+<TriplesMap1>
+  a rr:TriplesMap;
 
+  rml:logicalSource [ 
+    rml:source "data.csv";
+    rml:referenceFormulation ql:CSV
+  ];
 
+  rr:subjectMap [ 
+    rr:template "http://example.org/{name}";
+  
+  ];
+	
+  rr:predicateObjectMap [ 
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:template "http://example.org/{is a}" ]
+  ];
+
+  rr:predicateObjectMap [ 
+    rr:predicate schema:birthDate ;
+    rr:objectMap [ rml:reference "born on"; rr:datatype xsd:date ]
+  ] ;
+
+  rr:predicateObjectMap [ 
+    rr:predicate schema:addressLocality ;
+    rr:objectMap [ rr:template "http://example.org/{lives in}" ]
+  ];
+
+  rr:predicateObjectMap [ 
+    rr:predicate schema:workLocation ;
+    rr:objectMap [ rr:template "http://example.org/{works at}" ]
+  ];
+
+  rr:predicateObjectMap [ 
+    rr:predicate schema:alumniOf ;
+    rr:objectMap [  rr:template "http://example.org/{is alumna of}" ]
+  ];
+
+  rr:predicateObjectMap [ 
+    rr:predicate foaf:knows ;
+    rr:objectMap [ rr:template "http://example.org/{is friend of}" ]
+  ];
+  
+  rr:predicateObjectMap [ 
+    rr:predicate schema:study ;
+    rr:objectMap [ rr:template "http://example.org/{is studying at}" ]
+  ];
+
+  rr:predicateObjectMap [ 
+    rr:predicate schema:identifier ;
+    rr:objectMap [ rml:reference "has student number"; rr:datatype xsd:positiveInteger ]
+  ];
+  
+  rr:predicateObjectMap [ 
+    rr:predicate schema:courseCode ;
+    rr:objectMap [  rr:template "http://example.org/{is enrolled in1}" ]
+  ];
+
+   rr:predicateObjectMap [ 
+    rr:predicate schema:courseCode ;
+    rr:objectMap [  rr:template "http://example.org/{is enrolled in2}" ]
+  ].
